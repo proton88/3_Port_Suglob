@@ -18,20 +18,23 @@ public class Port {
 
     private String name;
     private int maxCapacity;
-    private AtomicInteger currentCapacity;
+    private AtomicInteger currentCapacity=new AtomicInteger(0);
     private Lock lock=new ReentrantLock();
 
-    public Port() {
+    private Port() {
         name=DEFAULT_NAME;
         maxCapacity=DEFAULT_MAX_CAPACITY;
         currentCapacity.set(DEFAULT_CURRENT_CAPACITY);
 
     }
 
-    public Port(String name, int maxCapacity, int currentCapacity) {
-        this.name = name;
-        this.maxCapacity = maxCapacity;
-        this.currentCapacity = new AtomicInteger(currentCapacity);
+    private static class PortHolder{
+        private static final Port INSTANCE = new Port();
+    }
+
+    public static Port getPort(){
+        return PortHolder.INSTANCE;
+
     }
 
     public void setName(String name) {

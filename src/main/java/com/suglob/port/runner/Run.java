@@ -22,7 +22,11 @@ public class Run {
     public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler(new ShipUncaughtExceptionHandler());
         ExecutorService dockManager = Executors.newFixedThreadPool(COUNT_DOCK);
-        Port port=new Port("Minsk", 2000000, 1900000);
+        Port port=Port.getPort();
+        port.setName("Minsk");
+        port.setMaxCapacity(2000_000);
+        port.setCurrentCapacity(1900_000);
+
         for (int i=0; i<1000;i++) {
             Ship ship = new Ship(10000, 7000, new UnloadingShip(), port);
             dockManager.execute(ship);

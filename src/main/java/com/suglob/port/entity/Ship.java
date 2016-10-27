@@ -4,15 +4,15 @@ import com.suglob.port.state.LoadingShip;
 import com.suglob.port.state.TargetShip;
 import com.suglob.port.state.UnloadingAndLoadingShip;
 import com.suglob.port.state.UnloadingShip;
+import com.suglob.port.utils.Generator;
 import org.apache.log4j.Logger;
 
 import java.util.Random;
 
 public class Ship extends Thread{
     static Logger logger = Logger.getLogger(Ship.class);
-    private static long count=1;
 
-    private final long shipId=count++;
+    private final long shipId= Generator.generateNextLong();
     private int shipCapacity;
     private int currentCapacity;
     private TargetShip targetShip;
@@ -51,25 +51,20 @@ public class Ship extends Thread{
         this.targetShip = targetShip;
     }
 
-    private void executeTarget(){
-        targetShip.executeTarget(this, port);
-        changeTarget();
-    }
 
-    private void changeTarget(){
+    @Override
+    public void run(){
+        targetShip.executeTarget(this, port);
+
+
         if (targetShip.getClass()==new UnloadingShip().getClass()){
             targetShip=new LoadingShip();
         }else{
-            int i=new Random().nextInt(2);
+            int i=Generator.generateRandomInt(2);
             targetShip=i==0?new UnloadingShip():new UnloadingAndLoadingShip();
         }
         logger.info("Ship "+ shipId+" change target on: "+targetShip+". Max capacity: "+shipCapacity+
                 ", current capacity: "+ currentCapacity);
-    }
-
-    @Override
-    public void run(){
-        executeTarget();
     }
 
 

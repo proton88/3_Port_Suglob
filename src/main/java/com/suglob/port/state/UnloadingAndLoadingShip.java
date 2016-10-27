@@ -2,6 +2,7 @@ package com.suglob.port.state;
 
 import com.suglob.port.entity.Port;
 import com.suglob.port.entity.Ship;
+import com.suglob.port.utils.Generator;
 import org.apache.log4j.Logger;
 
 import java.util.Random;
@@ -14,9 +15,8 @@ public class UnloadingAndLoadingShip implements TargetShip {
     private static final int SPEED_LOADING=10000;
     @Override
     public void executeTarget(Ship ship, Port port) {
-        Random random = new Random();
 
-        int unloadedWeight=random.nextInt(ship.getCurrentCapacity());
+        int unloadedWeight= Generator.generateRandomInt(ship.getCurrentCapacity());
         int timeUnloading=(int)(unloadedWeight/SPEED_UNLOADING*Math.random());
         port.checkAndFixUnloading(unloadedWeight);
         try {
@@ -27,7 +27,7 @@ public class UnloadingAndLoadingShip implements TargetShip {
         ship.setCurrentCapacity(ship.getCurrentCapacity()-unloadedWeight);
         port.addCurrentCapacity(unloadedWeight);
 
-        int loadedWeight=random.nextInt(ship.getShipCapacity()-ship.getCurrentCapacity());
+        int loadedWeight=Generator.generateRandomInt(ship.getShipCapacity()-ship.getCurrentCapacity());
         int timeLoading=(int)(loadedWeight/SPEED_LOADING*Math.random());
         port.checkAndFixLoading(loadedWeight);
         try {
