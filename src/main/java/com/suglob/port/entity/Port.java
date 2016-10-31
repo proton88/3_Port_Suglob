@@ -11,19 +11,19 @@ public class Port {
     static Logger logger = Logger.getLogger(Port.class);
 
     private static final String DEFAULT_NAME="Unknown";
-    private static final int DEFAULT_MAX_CAPACITY=5000_000;
-    private static final int DEFAULT_CURRENT_CAPACITY=2500_000;
+    private static final int MAX_CAPACITY=2000_000;
+    private static final int DEFAULT_CURRENT_CAPACITY=1000_000;
     private static final int DEFAULT_SAFETY_CAPACITY=500_000;
+    private static final int TIME_SLEEP=2;
+
 
 
     private String name;
-    private int maxCapacity;
     private AtomicInteger currentCapacity=new AtomicInteger(0);
     private Lock lock=new ReentrantLock();
 
     private Port() {
         name=DEFAULT_NAME;
-        maxCapacity=DEFAULT_MAX_CAPACITY;
         currentCapacity.set(DEFAULT_CURRENT_CAPACITY);
 
     }
@@ -41,9 +41,7 @@ public class Port {
         this.name = name;
     }
 
-    public void setMaxCapacity(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
+
 
     public void setCurrentCapacity(int currentCapacity) {
         this.currentCapacity.set(currentCapacity);
@@ -53,9 +51,6 @@ public class Port {
         return name;
     }
 
-    public int getMaxCapacity() {
-        return maxCapacity;
-    }
 
     public int getCurrentCapacity() {
         return currentCapacity.get();
@@ -79,7 +74,7 @@ public class Port {
             lock.lock();
             if (requiredWeight > currentCapacity.get()) {
                 loadPort();
-                TimeUnit.MILLISECONDS.sleep(2);
+                TimeUnit.MILLISECONDS.sleep(TIME_SLEEP);
                 logger.warn("The storage of port was refill. Current capacity: "+currentCapacity);
             }
         }catch (InterruptedException e){
@@ -93,9 +88,9 @@ public class Port {
     public void checkAndFixUnloading(int requiredWeight){
         try {
             lock.lock();
-            if (requiredWeight>maxCapacity-currentCapacity.get()){
+            if (requiredWeight>MAX_CAPACITY-currentCapacity.get()){
                 unloadPort();
-                TimeUnit.MILLISECONDS.sleep(2);
+                TimeUnit.MILLISECONDS.sleep(TIME_SLEEP);
                 logger.warn("The storage of port was unload. Current capacity: "+currentCapacity);
             }
         }catch (InterruptedException e){

@@ -5,7 +5,6 @@ import com.suglob.port.entity.Ship;
 import com.suglob.port.utils.Generator;
 import org.apache.log4j.Logger;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 
@@ -22,7 +21,7 @@ public class UnloadingAndLoadingShip implements TargetShip {
         try {
             TimeUnit.MILLISECONDS.sleep(timeUnloading);
         } catch (InterruptedException e) {
-            logger.error("Unplanned interruption of Thread. Target of ship "+ship.getShipId()+" not reached",e);
+            logger.error("Unplanned interruption of Thread. Target of ship "+ship.getSHIP_ID()+" not reached",e);
         }
         ship.setCurrentCapacity(ship.getCurrentCapacity()-unloadedWeight);
         port.addCurrentCapacity(unloadedWeight);
@@ -33,7 +32,7 @@ public class UnloadingAndLoadingShip implements TargetShip {
         try {
             TimeUnit.MILLISECONDS.sleep(timeLoading);
         } catch (InterruptedException e) {
-            logger.error("Unplanned interruption of Thread. Target of ship "+ship.getShipId()+" not reached",e);
+            logger.error("Unplanned interruption of Thread. Target of ship "+ship.getSHIP_ID()+" not reached",e);
         }
         ship.setCurrentCapacity(ship.getCurrentCapacity()+loadedWeight);
         port.addCurrentCapacity(-loadedWeight);
